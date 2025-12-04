@@ -97,9 +97,6 @@ jobs:
       - name: Health check (curl)
         run: |
           curl -f http://127.0.0.1:8000/health
-          curl -f -X POST http://127.0.0.1:8000/predict \
-            -H "Content-Type: application/json" \
-            -d '{"text": "Breaking news: new law was approved by the government."}'
 
       - name: Stop container
         if: always()

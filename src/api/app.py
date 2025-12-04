@@ -1,7 +1,7 @@
 from __future__ import annotations
 from fastapi import FastAPI, HTTPException
 
-from src.api.schemas import NewsRequest, NewsResponse
+from src.api.schemas import NewsRequest
 from src.models.infer import NewsInferenceModel
 
 app = FastAPI(
@@ -29,15 +29,18 @@ def health() -> dict:
     return {"status": status}
 
 
-@app.post("/predict", response_model=NewsResponse)
-def predict(request: NewsRequest) -> NewsResponse:
+@app.post("/predict")
+def predict(request: NewsRequest):
+    model = getattr(app.state, "model", None)
+
     if model is None:
-        raise HTTPException(status_code=500, detail="Model is not loaded")
-
-    result = model.predict_one(request.text)
-
-    return NewsResponse(
-        label=result["label"],
-        is_fake=result["is_fake"],
-        score=result["score"],
-    )
+        # модель не загружена – значит сервис недоступен
+        raise HTTPException(
+            status_code=503,
+            detail="Model is not loaded. Cannot perform prediction.",
+        )
+    try:
+        result = model.predict([request.text])[0]
+        return result
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
