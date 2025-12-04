@@ -1,0 +1,15 @@
+venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.log
+.git
+.dvc
+.dvcignore
+data/raw
+data/splits
+data/processed
+notebooks
+.idea
+.vscode
