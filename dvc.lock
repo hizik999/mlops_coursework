@@ -59,3 +59,54 @@ stages:
       md5: eb2de3bff7f15d724908f5f1c6ea8aa3.dir
       size: 110937608
       nfiles: 3
+  train_model:
+    cmd: python -m src.models.train --config configs/train.yaml
+    deps:
+    - path: configs/train.yaml
+      hash: md5
+      md5: 99f935bfa5bd73e425761edaaf896c3e
+      size: 578
+    - path: data/processed/v1
+      hash: md5
+      md5: e3b1941dff3a46c357ae301c8d775310.dir
+      size: 115114227
+      nfiles: 3
+    - path: data/processed/v2
+      hash: md5
+      md5: eb2de3bff7f15d724908f5f1c6ea8aa3.dir
+      size: 110937608
+      nfiles: 3
+    - path: src/features/build_features.py
+      hash: md5
+      md5: f1fe984522cc0c08f5d62448789a7831
+      size: 743
+    - path: src/models/train.py
+      hash: md5
+      md5: b776c5d18c6d8a9e891057953ac4a7e0
+      size: 5418
+    params:
+      configs/train.yaml:
+        data.version: v2
+        features.tfidf.max_features: 50000
+        features.tfidf.min_df: 2
+        features.tfidf.ngram_range:
+        - 1
+        - 2
+        features.type: tfidf
+        model.logreg.C: 1.0
+        model.logreg.max_iter: 1000
+        model.name: rf
+        model.rf.max_depth: 30
+        model.rf.n_estimators: 300
+        output.run_name: rf_v2
+        train.random_state: 42
+    outs:
+    - path: metrics.json
+      hash: md5
+      md5: e7a757e066a1d65467d0769c50210a22
+      size: 144
+    - path: models
+      hash: md5
+      md5: 2da4096acee83cacd68fbe65a65c54c4.dir
+      size: 65754018
+      nfiles: 3

@@ -1,8 +1,8 @@
 model:
-  name: "distilbert"
+  name: "rf" # best_model = rf
   path: "models/best_model"
 
 inference:
   device: "cpu"
-  max_seq_length: 128
+  max_seq_length: 256
   batch_size: 8

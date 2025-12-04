@@ -23,3 +23,30 @@ stages:
       - data/splits
     outs:
       - data/processed/v2
+
+  train_model:
+    cmd: python -m src.models.train --config configs/train.yaml
+    deps:
+      - src/models/train.py
+      - src/features/build_features.py
+      - configs/train.yaml
+      - data/processed/v1
+      - data/processed/v2
+    outs:
+      - models
+    metrics:
+      - metrics.json
+    params:
+      - configs/train.yaml:
+          - data.version
+          - features.type
+          - features.tfidf.max_features
+          - features.tfidf.ngram_range
+          - features.tfidf.min_df
+          - model.name
+          - model.logreg.C
+          - model.logreg.max_iter
+          - model.rf.n_estimators
+          - model.rf.max_depth
+          - train.random_state
+          - output.run_name
