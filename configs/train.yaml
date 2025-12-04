@@ -22,11 +22,6 @@ model:
   rf:
     n_estimators: 300
     max_depth: 30
-  distilbert:
-    pretrained_name: distilbert-base-uncased
-    lr: 2e-5
-    epochs: 3
-    batch_size: 16
 
 train:
   random_state: 42
