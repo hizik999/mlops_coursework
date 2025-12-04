@@ -7,14 +7,14 @@ from omegaconf import OmegaConf
 
 
 class NewsInferenceModel:
-
     def __init__(self, model, vectorizer):
         self.model = model
         self.vectorizer = vectorizer
 
     @classmethod
-    def from_config(cls, config_path: str = "configs/inference.yaml") -> "NewsInferenceModel":
-
+    def from_config(
+        cls, config_path: str = "configs/inference.yaml"
+    ) -> "NewsInferenceModel":
         cfg = OmegaConf.load(config_path)
         model_dir = pathlib.Path(cfg.model.path)
 

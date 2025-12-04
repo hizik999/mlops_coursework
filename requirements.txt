@@ -8,3 +8,5 @@ dvc
 tqdm
 python-dotenv
 ruff==0.12.10
+mypy==1.17.1
+pre-commit

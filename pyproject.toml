@@ -1,0 +1,26 @@
+[tool.ruff]
+line-length = 150
+extend-exclude = ["DATASET_CARD.md", "README.md", "MODEL_CARD.md"]
+
+[tool.ruff.lint]
+pylint.max-statements = 500
+select = ["ALL"]
+ignore = ["ARG", "ANN", "D", "COM812", "TD", "FIX002", "RUF003", "RUF005", "EXE001", "INP001", "SIM112", "G004",
+    "EM101", "TRY003", "S608", "E402"]
+
+
+[tool.ruff.lint.flake8-pytest-style]
+parametrize-names-type = "list"
+parametrize-values-type = "list"
+parametrize-values-row-type = "tuple"
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "double"
+multiline-quotes = "double"
+docstring-quotes = "double"
+
+[tool.ruff.format]
+
+[tool.mypy]
+files = ["./src"]
+ignore_missing_imports = true

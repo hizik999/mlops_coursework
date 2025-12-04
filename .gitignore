@@ -1,2 +1,4 @@
 /models
 /metrics.json
+.ruff_cache
+.mypy_cache

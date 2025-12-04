@@ -22,7 +22,9 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("source_path", type=str, help="Path to Kaggle dataset (dir or file)")
+    parser.add_argument(
+        "source_path", type=str, help="Path to Kaggle dataset (dir or file)"
+    )
     parser.add_argument("--target_dir", type=str, default="data/raw")
 
     args = parser.parse_args()
