@@ -1,3 +1,4 @@
+from __future__ import annotations
 from fastapi import FastAPI, HTTPException
 
 from src.api.schemas import NewsRequest, NewsResponse

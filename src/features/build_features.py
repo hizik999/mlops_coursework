@@ -1,4 +1,4 @@
-from typing import Tuple
+from __future__ import annotations
 
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -11,7 +11,7 @@ def build_tfidf_features(
     max_features: int = 50000,
     ngram_range: tuple[int, int] = (1, 2),
     min_df: int = 2,
-) -> Tuple:
+) -> tuple:
     vectorizer = TfidfVectorizer(
         max_features=max_features,
         ngram_range=ngram_range,

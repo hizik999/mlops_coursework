@@ -2,12 +2,12 @@ name: CI - fake news api
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, main ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, main ]
 
 jobs:
-  build-test-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,9 +24,64 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run minimal tests
+      - name: Build step (compile project)
         run: |
           python -m compileall src
+
+  codecheck:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install ruff
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install ruff==0.12.10 mypy==1.17.1
+
+      - name: Run ruff format, check, mypy 
+        run: |
+          python3 -m ruff format . --check
+          python3 -m ruff check .
+          python3 -m mypy .
+
+  test:
+    runs-on: ubuntu-latest
+    needs: codecheck
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies for tests
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+
+      - name: Run tests
+        run: |
+          pytest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Build Docker image
         run: |
@@ -37,7 +92,7 @@ jobs:
           docker run -d --rm -p 8000:8000 --name fake-news-api fake-news-api
           sleep 15
 
-      - name: Health check
+      - name: Health check (curl)
         run: |
           curl -f http://127.0.0.1:8000/health
           curl -f -X POST http://127.0.0.1:8000/predict \

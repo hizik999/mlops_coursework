@@ -1,9 +1,10 @@
+from __future__ import annotations
+
 import pathlib
 import re
 import string
 
 import pandas as pd
-
 
 URL_RE = re.compile(r"http\S+|www\.\S+")
 

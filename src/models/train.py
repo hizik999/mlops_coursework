@@ -1,6 +1,7 @@
+from __future__ import annotations
+
 import json
 import pathlib
-from typing import Dict, Tuple
 
 import joblib
 import numpy as np
@@ -13,9 +14,7 @@ from sklearn.metrics import accuracy_score, f1_score
 from src.features.build_features import build_tfidf_features
 
 
-def load_splits(
-    processed_base_dir: str, version: str
-) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def load_splits(processed_base_dir: str, version: str) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     base = pathlib.Path(processed_base_dir) / version
     train_df = pd.read_csv(base / "train.csv")
     val_df = pd.read_csv(base / "val.csv")
@@ -27,7 +26,7 @@ def _sanitize_text_columns(
     train_df: pd.DataFrame,
     val_df: pd.DataFrame,
     test_df: pd.DataFrame,
-) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     for df_name, df in (("train", train_df), ("val", val_df), ("test", test_df)):
         if "text" not in df.columns:
             raise KeyError(f"Column 'text' not found in {df_name} dataframe")
@@ -42,7 +41,7 @@ def compute_metrics(
     y_val_pred: np.ndarray,
     y_test_true: np.ndarray,
     y_test_pred: np.ndarray,
-) -> Dict[str, float]:
+) -> dict[str, float]:
     metrics = {
         "val_accuracy": float(accuracy_score(y_val_true, y_val_pred)),
         "val_f1": float(f1_score(y_val_true, y_val_pred)),
@@ -56,7 +55,7 @@ def save_metrics_and_models(
     cfg,
     model,
     vectorizer,
-    metrics: Dict[str, float],
+    metrics: dict[str, float],
 ) -> None:
     models_dir = pathlib.Path(cfg.output.models_dir)
     models_dir.mkdir(parents=True, exist_ok=True)
@@ -76,7 +75,7 @@ def save_metrics_and_models(
         json.dump(metrics, f, indent=2, ensure_ascii=False)
 
 
-def train_logreg_tfidf(cfg) -> Dict[str, float]:
+def train_logreg_tfidf(cfg) -> dict[str, float]:
     train_df, val_df, test_df = load_splits(
         cfg.data.base_dir,
         cfg.data.version,
@@ -113,7 +112,7 @@ def train_logreg_tfidf(cfg) -> Dict[str, float]:
     return metrics
 
 
-def train_rf_tfidf(cfg) -> Dict[str, float]:
+def train_rf_tfidf(cfg) -> dict[str, float]:
     """
     Обучение RandomForestClassifier + TF-IDF.
     """

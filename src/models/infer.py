@@ -1,5 +1,4 @@
 import pathlib
-from typing import List, Dict
 
 import joblib
 import numpy as np
@@ -12,9 +11,7 @@ class NewsInferenceModel:
         self.vectorizer = vectorizer
 
     @classmethod
-    def from_config(
-        cls, config_path: str = "configs/inference.yaml"
-    ) -> "NewsInferenceModel":
+    def from_config(cls, config_path: str = "configs/inference.yaml") -> "NewsInferenceModel":
         cfg = OmegaConf.load(config_path)
         model_dir = pathlib.Path(cfg.model.path)
 
@@ -31,7 +28,7 @@ class NewsInferenceModel:
 
         return cls(model=model, vectorizer=vectorizer)
 
-    def _prepare_texts(self, texts: List[str]) -> List[str]:
+    def _prepare_texts(self, texts: list[str]) -> list[str]:
         cleaned = []
         for t in texts:
             if t is None:
@@ -40,7 +37,7 @@ class NewsInferenceModel:
                 cleaned.append(str(t))
         return cleaned
 
-    def predict_proba(self, texts: List[str]) -> np.ndarray:
+    def predict_proba(self, texts: list[str]) -> np.ndarray:
         texts_clean = self._prepare_texts(texts)
         X = self.vectorizer.transform(texts_clean)
 
@@ -50,7 +47,7 @@ class NewsInferenceModel:
         probs = self.model.predict_proba(X)
         return probs
 
-    def predict(self, texts: List[str]) -> List[Dict]:
+    def predict(self, texts: list[str]) -> list[dict]:
         """
         Возвращает список словарей:
         {
@@ -71,7 +68,7 @@ class NewsInferenceModel:
         else:
             scores = np.full(shape=len(texts_clean), fill_value=np.nan)
 
-        results: List[Dict] = []
+        results: list[dict] = []
         for label, score in zip(y_pred, scores):
             label_int = int(label)
             is_fake = label_int == 0
@@ -87,5 +84,5 @@ class NewsInferenceModel:
 
         return results
 
-    def predict_one(self, text: str) -> Dict:
+    def predict_one(self, text: str) -> dict:
         return self.predict([text])[0]

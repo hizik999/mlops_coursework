@@ -1,5 +1,4 @@
 import pathlib
-from typing import Tuple
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -11,10 +10,7 @@ def load_raw_fake_real(raw_dir: str = "data/raw") -> pd.DataFrame:
     true_path = raw_path / "True.csv"
 
     if not fake_path.exists() or not true_path.exists():
-        raise FileNotFoundError(
-            f"Fake.csv or True.csv not found in {raw_path}. "
-            "Убедись, что файлы Kaggle лежат в data/raw."
-        )
+        raise FileNotFoundError(f"Fake.csv or True.csv not found in {raw_path}. Убедись, что файлы Kaggle лежат в data/raw.")
 
     fake_df = pd.read_csv(fake_path)
     true_df = pd.read_csv(true_path)
@@ -30,8 +26,7 @@ def load_raw_fake_real(raw_dir: str = "data/raw") -> pd.DataFrame:
     fake_df = fake_df[["text", "label"]]
     true_df = true_df[["text", "label"]]
 
-    df = pd.concat([fake_df, true_df], ignore_index=True)
-    df = df.sample(frac=1.0, random_state=42).reset_index(drop=True)
+    df = pd.concat([fake_df, true_df], ignore_index=True).sample(frac=1.0, random_state=42).reset_index(drop=True)
     return df
 
 
@@ -40,7 +35,7 @@ def split_dataset(
     test_size: float = 0.1,
     val_size: float = 0.2,
     random_state: int = 42,
-) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     train_df, test_df = train_test_split(
         df,
         test_size=test_size,

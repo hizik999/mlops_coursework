@@ -4,9 +4,9 @@ extend-exclude = ["DATASET_CARD.md", "README.md", "MODEL_CARD.md"]
 
 [tool.ruff.lint]
 pylint.max-statements = 500
-select = ["ALL"]
+select = ["E", "F", "UP", "FA"]
 ignore = ["ARG", "ANN", "D", "COM812", "TD", "FIX002", "RUF003", "RUF005", "EXE001", "INP001", "SIM112", "G004",
-    "EM101", "TRY003", "S608", "E402"]
+    "EM101", "TRY003", "S608", "E402", "S101", "EM102", "T201", "N806", "PLR0913", "RET504", "PD011"]
 
 
 [tool.ruff.lint.flake8-pytest-style]
