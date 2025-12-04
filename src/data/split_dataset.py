@@ -11,13 +11,24 @@ def load_raw_fake_real(raw_dir: str = "data/raw") -> pd.DataFrame:
     true_path = raw_path / "True.csv"
 
     if not fake_path.exists() or not true_path.exists():
-        raise FileNotFoundError("Fake.csv or True.csv not found in data/raw")
+        raise FileNotFoundError(
+            f"Fake.csv or True.csv not found in {raw_path}. "
+            "Убедись, что файлы Kaggle лежат в data/raw."
+        )
 
     fake_df = pd.read_csv(fake_path)
     true_df = pd.read_csv(true_path)
 
+    for df in (fake_df, true_df):
+        title = df["title"].fillna("")
+        text = df["text"].fillna("")
+        df["text"] = (title + " " + text).str.strip()
+
     fake_df["label"] = 0
     true_df["label"] = 1
+
+    fake_df = fake_df[["text", "label"]]
+    true_df = true_df[["text", "label"]]
 
     df = pd.concat([fake_df, true_df], ignore_index=True)
     df = df.sample(frac=1.0, random_state=42).reset_index(drop=True)
@@ -51,9 +62,9 @@ def save_splits(
     train_df: pd.DataFrame,
     val_df: pd.DataFrame,
     test_df: pd.DataFrame,
-    processed_dir: str = "data/processed/v1",
+    splits_dir: str = "data/splits",
 ) -> None:
-    out_dir = pathlib.Path(processed_dir)
+    out_dir = pathlib.Path(splits_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
     train_df.to_csv(out_dir / "train.csv", index=False)
@@ -65,7 +76,7 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--processed_dir", type=str, default="data/processed/v1")
+    parser.add_argument("--splits_dir", type=str, default="data/splits")
     parser.add_argument("--test_size", type=float, default=0.1)
     parser.add_argument("--val_size", type=float, default=0.2)
     parser.add_argument("--random_state", type=int, default=42)
@@ -79,4 +90,4 @@ if __name__ == "__main__":
         val_size=args.val_size,
         random_state=args.random_state,
     )
-    save_splits(train, val, test, processed_dir=args.processed_dir)
+    save_splits(train, val, test, splits_dir=args.splits_dir)

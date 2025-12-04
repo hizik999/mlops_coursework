@@ -1,0 +1,25 @@
+stages:
+  split_data:
+    cmd: python -m src.data.split_dataset --splits_dir data/splits
+    deps:
+      - src/data/split_dataset.py
+      - data/raw/Fake.csv
+      - data/raw/True.csv
+    outs:
+      - data/splits
+
+  preprocess_v1:
+    cmd: python -m src.data.preprocess --version v1 --input_dir data/splits --output_dir data/processed/v1
+    deps:
+      - src/data/preprocess.py
+      - data/splits
+    outs:
+      - data/processed/v1
+
+  preprocess_v2:
+    cmd: python -m src.data.preprocess --version v2 --input_dir data/splits --output_dir data/processed/v2
+    deps:
+      - src/data/preprocess.py
+      - data/splits
+    outs:
+      - data/processed/v2

@@ -1,0 +1,61 @@
+schema: '2.0'
+stages:
+  split_data:
+    cmd: python -m src.data.split_dataset --splits_dir data/splits
+    deps:
+    - path: data/raw/Fake.csv
+      hash: md5
+      md5: edcb323a8ed3e9f4d5d84016553009eb
+      size: 62789876
+    - path: data/raw/True.csv
+      hash: md5
+      md5: 4c3c571205b62c7591c451cfe60d6af1
+      size: 53582940
+    - path: src/data/split_dataset.py
+      hash: md5
+      md5: 10cef4a175e348136d00963d699dab52
+      size: 2636
+    outs:
+    - path: data/splits
+      hash: md5
+      md5: f5c140bafa5bd78557267265f4b762db.dir
+      size: 115114227
+      nfiles: 3
+  preprocess_v1:
+    cmd: python -m src.data.preprocess --version v1 --input_dir data/splits 
+      --output_dir data/processed/v1
+    deps:
+    - path: data/splits
+      hash: md5
+      md5: f5c140bafa5bd78557267265f4b762db.dir
+      size: 115114227
+      nfiles: 3
+    - path: src/data/preprocess.py
+      hash: md5
+      md5: e43c0aebc58c180aa0d75eec8c96f00b
+      size: 1908
+    outs:
+    - path: data/processed/v1
+      hash: md5
+      md5: e3b1941dff3a46c357ae301c8d775310.dir
+      size: 115114227
+      nfiles: 3
+  preprocess_v2:
+    cmd: python -m src.data.preprocess --version v2 --input_dir data/splits 
+      --output_dir data/processed/v2
+    deps:
+    - path: data/splits
+      hash: md5
+      md5: f5c140bafa5bd78557267265f4b762db.dir
+      size: 115114227
+      nfiles: 3
+    - path: src/data/preprocess.py
+      hash: md5
+      md5: e43c0aebc58c180aa0d75eec8c96f00b
+      size: 1908
+    outs:
+    - path: data/processed/v2
+      hash: md5
+      md5: eb2de3bff7f15d724908f5f1c6ea8aa3.dir
+      size: 110937608
+      nfiles: 3
