@@ -1,0 +1,50 @@
+name: CI - fake news api
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run minimal tests
+        run: |
+          python -m compileall src
+
+      - name: Build Docker image
+        run: |
+          docker build -t fake-news-api .
+
+      - name: Run container
+        run: |
+          docker run -d --rm -p 8000:8000 --name fake-news-api fake-news-api
+          sleep 15
+
+      - name: Health check
+        run: |
+          curl -f http://127.0.0.1:8000/health
+          curl -f -X POST http://127.0.0.1:8000/predict \
+            -H "Content-Type: application/json" \
+            -d '{"text": "Breaking news: new law was approved by the government."}'
+
+      - name: Stop container
+        if: always()
+        run: |
+          docker stop fake-news-api || true
