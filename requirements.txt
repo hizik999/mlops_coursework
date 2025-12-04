@@ -1,0 +1,12 @@
+numpy
+pandas
+scikit-learn
+torch
+transformers
+'fastapi[all]'
+uvicorn
+omegaconf
+dvc
+tqdm
+python-dotenv
+ruff==0.12.10

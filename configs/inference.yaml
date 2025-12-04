@@ -1,0 +1,8 @@
+model:
+  name: "distilbert"
+  path: "models/best_model"
+
+inference:
+  device: "cpu"
+  max_seq_length: 128
+  batch_size: 8
