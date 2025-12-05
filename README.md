@@ -9,7 +9,7 @@
 ---
 
 ## 📁 Структура репозитория
-
+```
 mlops_coursework/
 │
 ├── configs/  
@@ -42,7 +42,7 @@ mlops_coursework/
 ├── README.md  
 ├── MODEL_CARD.md  
 └── DATASET_CARD.md
-
+```
 ---
 
 ## 🚀 Установка окружения
